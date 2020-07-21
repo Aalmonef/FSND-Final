@@ -26,7 +26,7 @@ class Movies(db.Model):
    id = Column(Integer, primary_key=True)
    title = Column(String())
    release_date = Column(DateTime, default=datetime.datetime.utcnow)
-   # actors_id = Column(Integer, ForeignKey('Actors.id'))
+
 
    def __init__(self, title, release_date):
       self.title = title
@@ -57,7 +57,6 @@ class Actors(db.Model):
    age = Column(Integer)
    gender = Column(String())
 
-   # movies = db.relationship('movies',backref='Actors',lazy='dynamic')
 
 
    def __init__(self, name, age, gender):

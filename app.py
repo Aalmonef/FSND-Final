@@ -143,7 +143,6 @@ def create_app(test_config=None):
             body = request.get_json()
             movie.title = body.get('title', None)
             movie.release_date = body.get('release_date', None)
-            # movie.actors_id = body.get('actors_id', None)
             movie.update()
             return jsonify({
               'success': True,
