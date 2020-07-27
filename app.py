@@ -28,13 +28,10 @@ def create_app(test_config=None):
         response.headers.add('Access-Control-Allow-Methods',
                              'GET, POST, PATCH, DELETE, OPTIONS')
         return response
-        
+
     @app.route('/', methods=['GET'])
     def login():
-        return jsonify({
-            'success': True,
-            'description': 'Welcome'
-        })
+        return render_template('index.html')
 
     @app.route('/movies', methods=['GET'])
     @requires_auth('get:movies')
