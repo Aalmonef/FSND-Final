@@ -31,7 +31,6 @@ class Movies(db.Model):
    def __init__(self, title, release_date):
       self.title = title
       self.release_date = release_date
-      # self.actors_id = actors_id
    
    def insert(self):
       db.session.add(self)
