@@ -7,8 +7,8 @@ from flask_migrate import Migrate
 
 
 
-# database_path = 'postgres://az@localhost:5432/testapp'
-database_path = os.environ['DATABASE_URL']
+database_path = 'postgres://az@localhost:5432/testapp'
+# database_path = os.environ['DATABASE_URL']
 
 db = SQLAlchemy()
 

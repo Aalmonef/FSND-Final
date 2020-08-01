@@ -22,7 +22,7 @@ def paginate(request, selection):
 
 def create_app(test_config=None):
 
-    app = Flask(__name__, static_url_path='/public', static_folder='./public')
+    app = Flask(__name__, static_url_path='', static_folder='./frontend')
     app.debug = True
     setup_db(app)
     CORS(app)
@@ -38,7 +38,7 @@ def create_app(test_config=None):
 
     @app.route('/', methods=['GET'])
     def index():
-        return render_template('index.html')
+        return app.send_static_file('index.html')
 
 
     @app.route('/movies', methods=['GET'])
