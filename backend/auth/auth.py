@@ -1,5 +1,5 @@
 import json
-from flask import request, _request_ctx_stack, abort
+from flask import request, _request_ctx_stack, abort, session, redirect
 from functools import wraps
 from jose import jwt
 import urllib.request
@@ -9,6 +9,7 @@ from urllib.request import urlopen
 AUTH0_DOMAIN= 'dev-sphgry79.us.auth0.com'
 API_AUDIENCE= 'final'
 ALGORITHMS= ['RS256']
+AUTH0_CLIENT_SECRET = 't7asTB_Dj-TebhrWTjnLUYyXe-o_bcWDHxJJhIEa_uV3dlhSi-KN5C4NiaPGUQng'
 
 
 class AuthError(Exception):
@@ -112,6 +113,7 @@ def requires_auth(permission=''):
             try:
                 payload = verify_decode_jwt(token)
                 check_permission(permission, payload)
+                print(token)
             except:
                 abort(401)
             return f(payload, *args, **kwargs)

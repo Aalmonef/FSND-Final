@@ -1,9 +1,14 @@
 import os
-from flask import Flask, request, abort, jsonify, render_template, redirect
+from flask import Flask, request, abort, jsonify, render_template, redirect, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import setup_db, Movies, Actors
 from auth.auth import AuthError, requires_auth
+from dotenv import load_dotenv, find_dotenv
+from authlib.integrations.flask_client import OAuth
+from six.moves.urllib.parse import urlencode
+
+
 
 
 def paginate(request, selection):
@@ -16,10 +21,12 @@ def paginate(request, selection):
 
 
 def create_app(test_config=None):
-    # create and configure the app
-    app = Flask(__name__, template_folder='frontend')
+
+    app = Flask(__name__, static_url_path='/public', static_folder='./public')
+    app.debug = True
     setup_db(app)
     CORS(app)
+
 
     @app.after_request
     def after_request(response):
@@ -33,9 +40,10 @@ def create_app(test_config=None):
     def index():
         return render_template('index.html')
 
+
     @app.route('/movies', methods=['GET'])
-    # @requires_auth('get:movies')
-    def get_movies():
+    @requires_auth('get:movies')
+    def get_movies(payload):
         try:
             movies = Movies.query.order_by(Movies.id).all()
             movies_per_page = paginate(request, movies)

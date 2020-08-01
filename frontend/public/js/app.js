@@ -1,18 +1,137 @@
-$(document).ready(function(){
-    $('#movies').hide();
-    $('#actors').hide();
+let auth0 = null;
 
-    $('#movies_list').on('click', function(event){
-        $('#gated-content').hide();
-        $.ajax({
-            method: 'GET',
-            url: 'https://fsndfinal.herokuapp.com/movies',
-            success: function(movie){
-                $('#title').text(movie.title)
-                $('#date').text(movie.release_date)
-                console.log(movie)
-            }
-        })
-        $('#movies').show();
-    })
-});
+$("#btn-logout").addClass("hidden");
+$("#movies").addClass("hidden");
+$("#actors").addClass("hidden");
+$("#back").addClass("hidden");
+$("#movies-container").hide();
+$("#actors-container").hide();
+$("#add_movie_form").hide()
+$("#new_movie").hide()
+
+const fetchAuthConfig = () => fetch("/auth_config.json");
+const configureClient = async () => {
+    const response = await fetchAuthConfig();
+    const config = await response.json();
+  
+    auth0 = await createAuth0Client({
+      domain: config.domain,
+      client_id: config.clientId,
+      audience: config.audience
+    });
+  };
+
+window.onload = async () => {
+    await configureClient();
+    updateUI()
+
+    const isAuthenticated = await auth0.isAuthenticated();
+
+    if(isAuthenticated){
+        $("#btn-login").addClass("hidden");
+        $("#btn-logout").removeClass("hidden");
+        $("#movies").removeClass("hidden");
+        $("#actors").removeClass("hidden");
+    }
+
+    const query = window.location.search;
+    if (query.includes("code=") && query.includes("state=")) {
+    
+        await auth0.handleRedirectCallback();
+        updateUI();
+        window.history.replaceState({}, document.title, "/");
+    }
+};
+
+const updateUI = async () => {
+    const isAuthenticated = await auth0.isAuthenticated();
+  
+    document.getElementById("btn-logout").disabled = !isAuthenticated;
+    document.getElementById("btn-login").disabled = isAuthenticated;
+
+    if(isAuthenticated){
+        $("#btn-login").addClass("hidden");
+        $("#gated-content").removeClass("hidden");
+        $("#ipt-access-token").html(await auth0.getTokenSilently());
+        $("#movies").prop("disabled", false);
+        $("#actors").prop("disabled", false);
+        $("#btn-logout").removeClass("hidden");
+        $("#movies").removeClass("hidden");
+        $("#actors").removeClass("hidden");
+
+    }
+};
+
+const login = async () => {
+    await auth0.loginWithRedirect({
+      redirect_uri: window.location.origin
+    });
+};
+
+const logout = () => {
+    auth0.logout({
+      returnTo: window.location.origin
+    });
+};
+const back = async () => {
+    window.location.href="../index.html"
+}
+
+const movies = async (event) => {
+  const accessToken = await auth0.getTokenSilently();
+  $("#movies-container").show()
+  $("#gated-content").addClass("hidden");
+  $("#btn-logout").addClass("hidden");
+  $("#actors").addClass("hidden");
+  $("#movies").addClass("hidden");
+  $("#back").removeClass("hidden");
+  $("#head").removeClass("container");
+  $(".container").hide();
+
+  $.ajax({
+      method: 'GET',
+      url: 'https://fsndfinal.herokuapp.com/movies',
+      headers: {
+        Authorization: 'Bearer ' + accessToken
+      },
+      success: function(movie){
+        movie[0].movies.forEach(function(m){
+           
+            $("<h3>").appendTo("#movies-container").text("Title: "+m.title);
+            $("<h5>").appendTo("#movies-container").text("Release Date: "+m.release_date)
+            $("<h5>").appendTo("#movies-container").text("Id: "+m.id)
+        });
+      }
+  });
+}
+
+const actors = async () => {
+    const accessToken = await auth0.getTokenSilently();
+    $("#movies-container").hide()
+    $("#gated-content").addClass("hidden");
+    $("#btn-logout").addClass("hidden");
+    $("#actors").removeClass("hidden");
+    $("#movies").addClass("hidden");
+    $("#back").removeClass("hidden");
+    $("#head").removeClass("container");
+    $(".container").hide();
+    $("#actors-container").show();
+
+  
+    $.ajax({
+        method: 'GET',
+        url: 'https://fsndfinal.herokuapp.com/actors',
+        headers: {
+          Authorization: 'Bearer ' + accessToken
+        },
+        success: function(actor){
+          actor[0].actors.forEach(function(actor){
+             
+              $("<h3>").appendTo("#actors-container").text("Name: "+actor.name);
+              $("<h5>").appendTo("#actors-container").text("Age: "+actor.age)
+              $("<h5>").appendTo("#actors-container").text("Gender: "+actor.gender)
+              $("<h5>").appendTo("#actors-container").text("Id: "+actor.id)
+          });
+        }
+    });
+  }
