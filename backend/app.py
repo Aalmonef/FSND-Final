@@ -22,7 +22,7 @@ def paginate(request, selection):
 
 def create_app(test_config=None):
 
-    app = Flask(__name__, static_url_path='', static_folder='./frontend')
+    app = Flask(__name__, static_url_path='', static_folder='../frontend/static')
     app.debug = True
     setup_db(app)
     CORS(app)
