@@ -32,6 +32,8 @@ window.onload = async () => {
         $("#btn-logout").removeClass("hidden");
         $("#movies").removeClass("hidden");
         $("#actors").removeClass("hidden");
+        $("#btn-login").prop("disabled", false);
+        $("#btn-logout").prop("disabled", false);
     }
 
     const query = window.location.search;
@@ -58,7 +60,9 @@ const updateUI = async () => {
         $("#btn-logout").removeClass("hidden");
         $("#movies").removeClass("hidden");
         $("#actors").removeClass("hidden");
-
+    }
+    else{
+      $("#btn-login").show();
     }
 };
 
@@ -75,7 +79,6 @@ const logout = () => {
 };
 const back = async () => {
     window.location.href="../"
-    updateUI()
 }
 
 const movies = async (event) => {
