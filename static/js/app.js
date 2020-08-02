@@ -50,7 +50,7 @@ const updateUI = async () => {
     document.getElementById("btn-login").disabled = isAuthenticated;
 
     if(isAuthenticated){
-        $("#btn-login").addClass("hidden");
+        $("#btn-login").hide();
         $("#gated-content").removeClass("hidden");
         $("#ipt-access-token").html(await auth0.getTokenSilently());
         $("#movies").prop("disabled", false);
