@@ -73,12 +73,13 @@ const logout = () => {
       returnTo: window.location.origin
     });
 };
-const back = async () => {
+const back = async (event) => {
+    event.preventDefault()
     window.location.href="../"
     window.location.reload();
 }
 
-const movies = async (event) => {
+const movies = async () => {
   const accessToken = await auth0.getTokenSilently();
   $("#movies-container").show()
   $("#gated-content").addClass("hidden");
