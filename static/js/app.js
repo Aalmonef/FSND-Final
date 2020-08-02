@@ -75,6 +75,7 @@ const logout = () => {
 };
 const back = async () => {
     window.location.href="../"
+    updateUI()
 }
 
 const movies = async (event) => {
