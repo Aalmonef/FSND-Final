@@ -40,7 +40,6 @@ def create_app(test_config=None):
     def index():
         return render_template('index.html')
 
-
     @app.route('/movies', methods=['GET'])
     @requires_auth('get:movies')
     def get_movies(payload):

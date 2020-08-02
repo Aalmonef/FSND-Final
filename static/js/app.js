@@ -32,6 +32,8 @@ window.onload = async () => {
         $("#btn-logout").removeClass("hidden");
         $("#movies").removeClass("hidden");
         $("#actors").removeClass("hidden");
+        $("#btn-login").prop("disabled", false);
+        $("#btn-logout").prop("disabled", false);
     }
 
     const query = window.location.search;
