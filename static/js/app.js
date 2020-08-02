@@ -6,8 +6,7 @@ $("#actors").addClass("hidden");
 $("#back").addClass("hidden");
 $("#movies-container").hide();
 $("#actors-container").hide();
-$("#add_movie_form").hide()
-$("#new_movie").hide()
+
 
 const fetchAuthConfig = () => fetch("static/auth_config.json");
 const configureClient = async () => {
@@ -61,9 +60,6 @@ const updateUI = async () => {
         $("#movies").removeClass("hidden");
         $("#actors").removeClass("hidden");
     }
-    else{
-      $("#btn-login").show();
-    }
 };
 
 const login = async () => {
@@ -79,6 +75,7 @@ const logout = () => {
 };
 const back = async () => {
     window.location.href="../"
+    updateUI();
 }
 
 const movies = async (event) => {
