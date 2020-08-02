@@ -25,16 +25,19 @@ window.onload = async () => {
     updateUI()
 
     const isAuthenticated = await auth0.isAuthenticated();
-
+    console.log(isAuthenticated)
     if(isAuthenticated){
         $("#btn-login").addClass("hidden");
         $("#btn-logout").removeClass("hidden");
         $("#movies").removeClass("hidden");
         $("#actors").removeClass("hidden");
         $("#btn-login").prop("disabled", false);
-        $("#btn-logout").prop("disabled", false);
+        $("#btn-logout").prop("disabled", true);
     }
 
+    else{
+      $("#btn-login").prop("disabled", false);
+    }
     const query = window.location.search;
     if (query.includes("code=") && query.includes("state=")) {
     
@@ -56,6 +59,8 @@ const updateUI = async () => {
         $("#ipt-access-token").html(await auth0.getTokenSilently());
         $("#movies").prop("disabled", false);
         $("#actors").prop("disabled", false);
+        $("#btn-login").prop("disabled", false);
+        $("#btn-logout").prop("disabled", true);
         $("#btn-logout").removeClass("hidden");
         $("#movies").removeClass("hidden");
         $("#actors").removeClass("hidden");
@@ -74,10 +79,10 @@ const logout = () => {
     });
 };
 const back = async (event) => {
-    event.preventDefault()
-    window.location.href="../"
-    window.location.reload();
-}
+    auth0.logout({
+      returnTo: window.location.origin
+    });
+  }
 
 const movies = async () => {
   const accessToken = await auth0.getTokenSilently();
